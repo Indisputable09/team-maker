@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Indisputable09/team-maker/static/css/main.7acaea2f.css",
-    "main.js": "/Indisputable09/team-maker/static/js/main.07d3183d.js",
+    "main.js": "/Indisputable09/team-maker/static/js/main.234332c5.js",
     "index.html": "/Indisputable09/team-maker/index.html",
     "main.7acaea2f.css.map": "/Indisputable09/team-maker/static/css/main.7acaea2f.css.map",
-    "main.07d3183d.js.map": "/Indisputable09/team-maker/static/js/main.07d3183d.js.map"
+    "main.234332c5.js.map": "/Indisputable09/team-maker/static/js/main.234332c5.js.map"
   },
   "entrypoints": [
     "static/css/main.7acaea2f.css",
-    "static/js/main.07d3183d.js"
+    "static/js/main.234332c5.js"
   ]
 }
