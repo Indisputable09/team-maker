@@ -2,20 +2,21 @@ import React from 'react';
 import { nanoid } from 'nanoid';
 import { FaTshirt } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { Slide, ToastContainer } from 'react-toastify';
-import { Button, ButtonsBlock, Container } from './App.styled';
+import { Slide, toast, ToastContainer } from 'react-toastify';
+import { Button, ButtonsBlock, Container, MainButton } from './App.styled';
 
 export const App = () => {
   const [state, setState] = React.useState([
     {
       id: nanoid(),
-      color: 'black',
+      color: '',
       players: 0,
-      maxPlayers: 0,
+      maxPlayers: '',
     },
   ]);
-  console.log('state', state);
   const [colors, setColors] = React.useState([]);
+  const [chosenColor, setChosenColor] = React.useState('');
+
   React.useEffect(() => {
     const newColors = state.map(item => {
       if (item.maxPlayers === item.players) {
@@ -28,6 +29,7 @@ export const App = () => {
   const handleGetColorClick = (min, max) => {
     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
     const chosenColor = colors[randomNumber];
+    setChosenColor(chosenColor);
 
     const allDone = colors.every(item => item === null);
     if (allDone) {
@@ -38,7 +40,7 @@ export const App = () => {
       return handleGetColorClick(min, max);
     }
 
-    // toast.success(chosenColor, {});
+    toast.success(chosenColor);
 
     const newArray = state.map(item => {
       if (item.color === chosenColor) {
@@ -54,9 +56,9 @@ export const App = () => {
         ...prevState,
         {
           id: nanoid(),
-          color: 'black',
+          color: '',
           players: 0,
-          maxPlayers: 0,
+          maxPlayers: '',
         },
       ];
     });
@@ -83,8 +85,8 @@ export const App = () => {
   };
 
   const disabledButton =
-    colors.every(color => color === null) ||
-    state.some(color => color.maxPlayers < color.players);
+    colors.some(color => color === '') ||
+    state.some(color => Number(color.maxPlayers) < color.players);
 
   return (
     <Container
@@ -100,52 +102,90 @@ export const App = () => {
         theme={'colored'}
         transition={Slide}
         closeOnClick
+        toastStyle={{ backgroundColor: chosenColor }}
       />
-      <ul style={{ outline: '2px solid red' }}>
+      <ul style={{ paddingLeft: 0 }}>
         {state.length === 0 ? (
           <p>No teams</p>
         ) : (
           state.map((item, index) => {
             return (
               <li key={item.id}>
-                <FaTshirt color={item.color} size={30} />
                 <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '16px' }}
+                >
+                  <FaTshirt color={item.color} size={34} />
+                  <div
+                    style={{
+                      display: 'flex',
+                      width: '100%',
+                      fontSize: '20px',
+                    }}
+                  >
+                    <p>
+                      <span style={{ marginRight: '16px' }}>-</span>
+                      {item.players} гравців
+                    </p>
+                  </div>
+                </div>
+                <label
                   style={{
-                    // borderRadius: '50%',
-                    border: '1px solid red',
-                    width: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    height: '40px',
+                    fontSize: '16px',
+                    marginBottom: '24px',
                   }}
                 >
-                  {item.players}
-                </div>
-                <input
-                  placeholder="Color"
-                  value={item.color}
-                  onChange={handleChange(index, 'color')}
-                />
-                <input
-                  placeholder="Maximum players"
-                  type="number"
-                  value={Number(item.maxPlayers).toString()}
-                  onChange={handleChange(index, 'maxPlayers')}
-                />
+                  Колір команди буде:
+                  <input
+                    style={{ flexGrow: 1, height: '100%', fontSize: '16px' }}
+                    placeholder="Колір команди"
+                    value={item.color}
+                    onChange={handleChange(index, 'color')}
+                  />
+                </label>
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    height: '40px',
+                    fontSize: '16px',
+                  }}
+                >
+                  Гравців в команді буде:
+                  <input
+                    style={{ flexGrow: 1, height: '100%', fontSize: '16px' }}
+                    placeholder="Кількість гравців"
+                    type="number"
+                    value={item.maxPlayers}
+                    onChange={handleChange(index, 'maxPlayers')}
+                  />
+                </label>
+                <hr style={{ marginTop: '16px' }} />
               </li>
             );
           })
         )}
       </ul>
-      <button
+      <MainButton
         type="button"
         onClick={() => handleGetColorClick(0, colors.length - 1)}
         disabled={disabledButton}
       >
         Get color
-      </button>
+      </MainButton>
       <ButtonsBlock>
         <Button type="button" onClick={handleAddClick}>
           +
         </Button>
-        <Button type="button" onClick={handleDeleteClick}>
+        <Button
+          type="button"
+          onClick={handleDeleteClick}
+          disabled={state.length === 1}
+        >
           -
         </Button>
       </ButtonsBlock>
